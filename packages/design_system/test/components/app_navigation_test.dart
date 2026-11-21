@@ -5,7 +5,7 @@ import 'package:design_system/src/components/navigation/app_navigation_item.dart
 import 'package:design_system/src/components/navigation/app_navigation_rail.dart';
 import 'package:design_system/src/components/navigation/app_tab_bar.dart';
 import 'package:design_system/src/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

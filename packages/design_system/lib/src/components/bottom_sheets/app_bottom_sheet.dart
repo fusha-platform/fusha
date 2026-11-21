@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../foundation/motion/app_motion.dart';
 import '../../foundation/motion/app_motion_durations.dart';

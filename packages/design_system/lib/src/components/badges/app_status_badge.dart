@@ -1,6 +1,6 @@
 import 'package:design_system/src/components/badges/app_badge.dart';
 import 'package:design_system/src/components/badges/app_badge_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum AppStatus {
   active,

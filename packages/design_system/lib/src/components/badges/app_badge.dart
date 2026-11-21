@@ -1,6 +1,6 @@
 import 'package:design_system/src/components/badges/app_badge_type.dart';
 import 'package:design_system/src/theme/extensions/app_theme_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppBadge extends StatelessWidget {
   const AppBadge({

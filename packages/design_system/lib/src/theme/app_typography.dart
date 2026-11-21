@@ -1,6 +1,6 @@
 import 'package:design_system/src/foundation/typography/app_font_families.dart';
 import 'package:design_system/src/foundation/typography/app_text_styles.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract final class AppTypography {
   AppTypography._();

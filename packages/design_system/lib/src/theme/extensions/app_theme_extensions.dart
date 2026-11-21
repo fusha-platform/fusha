@@ -1,5 +1,5 @@
 import 'package:design_system/src/theme/extensions/app_colors_extension.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension AppThemeExtensions on BuildContext {
   AppColorsExtension get appColors {

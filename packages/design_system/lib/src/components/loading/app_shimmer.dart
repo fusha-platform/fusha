@@ -1,6 +1,6 @@
 
 import 'package:design_system/src/foundation/motion/app_motion.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppShimmer extends StatefulWidget {
   const AppShimmer({

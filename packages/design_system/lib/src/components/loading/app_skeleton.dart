@@ -1,5 +1,5 @@
 import 'package:design_system/src/components/loading/app_shimmer.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum AppSkeletonShape {
   rectangle,

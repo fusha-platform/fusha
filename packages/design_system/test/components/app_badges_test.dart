@@ -3,7 +3,7 @@ import 'package:design_system/src/components/badges/app_badge_type.dart';
 import 'package:design_system/src/components/badges/app_notification_badge.dart';
 import 'package:design_system/src/components/badges/app_status_badge.dart';
 import 'package:design_system/src/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -4,7 +4,7 @@ import 'package:design_system/src/components/chips/app_choice_chip.dart';
 import 'package:design_system/src/components/chips/app_filter_chip.dart';
 import 'package:design_system/src/components/chips/app_input_chip.dart';
 import 'package:design_system/src/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget buildTestWidget(Widget child) {

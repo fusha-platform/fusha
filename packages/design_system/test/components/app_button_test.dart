@@ -2,7 +2,7 @@
 import 'package:design_system/src/components/buttons/app_button.dart';
 import 'package:design_system/src/components/buttons/app_button_size.dart';
 import 'package:design_system/src/components/buttons/app_button_type.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

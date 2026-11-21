@@ -3,7 +3,7 @@ import 'package:design_system/src/foundation/motion/app_motion.dart';
 import 'package:design_system/src/foundation/motion/app_motion_durations.dart';
 import 'package:design_system/src/foundation/radius/app_radius.dart';
 import 'package:design_system/src/theme/extensions/app_theme_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
   const AppBottomNavigationBar({

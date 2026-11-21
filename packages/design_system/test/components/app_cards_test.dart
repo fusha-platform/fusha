@@ -5,7 +5,7 @@ import 'package:design_system/src/components/cards/app_card_header.dart';
 import 'package:design_system/src/components/cards/app_card_type.dart';
 import 'package:design_system/src/components/cards/app_info_card.dart';
 import 'package:design_system/src/theme/app_theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget buildTestWidget(Widget child) {
