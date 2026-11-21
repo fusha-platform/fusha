@@ -1,0 +1,42 @@
+
+name: Fusha CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Set up Melos
+        run: dart pub global activate melos 8.2.2
+
+      - name: Bootstrap workspace
+        run: dart run melos bootstrap
+
+      - name: Analyze workspace
+        run: dart run melos exec --fail-fast -- flutter analyze
+
+      - name: Test workspace
+        run: dart run melos exec --fail-fast -- flutter test
