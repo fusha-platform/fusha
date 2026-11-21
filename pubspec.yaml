@@ -1,0 +1,32 @@
+
+name: fusha_workspace
+description: Fusha Palestinian Experiences Monorepo
+publish_to: none
+
+environment:
+  sdk: ^3.12.2
+
+workspace:
+  - apps/customer_mobile
+  - apps/management_dashboard
+  - packages/design_system
+  - packages/app_core
+  - packages/shared_models
+  - packages/shared_services
+  - packages/shared_widgets
+  - packages/firebase_backend
+
+dev_dependencies:
+  melos: ^8.2.2
+
+
+melos:
+  scripts:
+    analyze:
+      run: dart run melos exec -- flutter analyze
+
+    test:
+      run: dart run melos exec --dir-exists=test -- flutter test
+
+    format:
+      run: dart format .
