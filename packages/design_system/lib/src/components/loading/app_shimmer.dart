@@ -1,4 +1,3 @@
-
 import 'package:design_system/src/foundation/motion/app_motion.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -9,7 +8,7 @@ class AppShimmer extends StatefulWidget {
     this.baseColor,
     this.highlightColor,
     this.duration = const Duration(milliseconds: 1200),
-  }) : assert(duration > Duration.zero);
+  });
 
   final Widget child;
   final Color? baseColor;
@@ -29,11 +28,11 @@ class _AppShimmerState extends State<AppShimmer>
   @override
   void initState() {
     super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
+    assert(
+      widget.duration.inMicroseconds > 0,
+      'AppShimmer duration must be greater than zero.',
     );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
   }
 
   @override
@@ -86,8 +85,7 @@ class _AppShimmerState extends State<AppShimmer>
     final baseColor =
         widget.baseColor ?? theme.colorScheme.surfaceContainerHighest;
 
-    final highlightColor =
-        widget.highlightColor ?? theme.colorScheme.surface;
+    final highlightColor = widget.highlightColor ?? theme.colorScheme.surface;
 
     if (_reduceMotion == true) {
       return widget.child;
@@ -105,11 +103,7 @@ class _AppShimmerState extends State<AppShimmer>
             return LinearGradient(
               begin: Alignment(position - 1, 0),
               end: Alignment(position + 1, 0),
-              colors: [
-                baseColor,
-                highlightColor,
-                baseColor,
-              ],
+              colors: [baseColor, highlightColor, baseColor],
               stops: const [0.35, 0.5, 0.65],
             ).createShader(bounds);
           },

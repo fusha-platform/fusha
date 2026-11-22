@@ -11,43 +11,33 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Widget buildTestWidget(Widget child) {
     return MaterialApp(
-      theme: AppTheme.light(locale: const Locale('en')),
+      theme: AppTheme.light(
+        locale: const Locale('en'),
+      ).copyWith(splashFactory: NoSplash.splashFactory),
       home: Scaffold(body: child),
     );
   }
 
   group('AppCircularProgress', () {
     testWidgets('renders circular progress indicator', (tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(const AppCircularProgress()),
-      );
+      await tester.pumpWidget(buildTestWidget(const AppCircularProgress()));
 
-      expect(
-        find.byType(CircularProgressIndicator),
-        findsOneWidget,
-      );
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('supports all sizes', (tester) async {
       for (final size in AppProgressSize.values) {
         await tester.pumpWidget(
-          buildTestWidget(
-            AppCircularProgress(size: size),
-          ),
+          buildTestWidget(AppCircularProgress(size: size)),
         );
 
-        expect(
-          find.byType(CircularProgressIndicator),
-          findsOneWidget,
-        );
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
       }
     });
 
     testWidgets('supports determinate progress', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppCircularProgress(value: 0.5),
-        ),
+        buildTestWidget(const AppCircularProgress(value: 0.5)),
       );
 
       final progress = tester.widget<CircularProgressIndicator>(
@@ -59,9 +49,7 @@ void main() {
 
     testWidgets('supports custom stroke width', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppCircularProgress(strokeWidth: 5),
-        ),
+        buildTestWidget(const AppCircularProgress(strokeWidth: 5)),
       );
 
       final progress = tester.widget<CircularProgressIndicator>(
@@ -74,21 +62,14 @@ void main() {
 
   group('AppLinearProgress', () {
     testWidgets('renders linear progress indicator', (tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(const AppLinearProgress()),
-      );
+      await tester.pumpWidget(buildTestWidget(const AppLinearProgress()));
 
-      expect(
-        find.byType(LinearProgressIndicator),
-        findsOneWidget,
-      );
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
     });
 
     testWidgets('supports determinate progress', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppLinearProgress(value: 0.75),
-        ),
+        buildTestWidget(const AppLinearProgress(value: 0.75)),
       );
 
       final progress = tester.widget<LinearProgressIndicator>(
@@ -100,9 +81,7 @@ void main() {
 
     testWidgets('supports custom height', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppLinearProgress(minHeight: 8),
-        ),
+        buildTestWidget(const AppLinearProgress(minHeight: 8)),
       );
 
       final progress = tester.widget<LinearProgressIndicator>(
@@ -115,44 +94,29 @@ void main() {
 
   group('AppLoading', () {
     testWidgets('renders progress indicator', (tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(const AppLoading()),
-      );
+      await tester.pumpWidget(buildTestWidget(const AppLoading()));
 
-      expect(
-        find.byType(CircularProgressIndicator),
-        findsOneWidget,
-      );
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('renders optional message', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppLoading(message: 'Loading data...'),
-        ),
+        buildTestWidget(const AppLoading(message: 'Loading data...')),
       );
 
       expect(find.text('Loading data...'), findsOneWidget);
     });
 
     testWidgets('does not render message when omitted', (tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(const AppLoading()),
-      );
+      await tester.pumpWidget(buildTestWidget(const AppLoading()));
 
       expect(find.text('Loading'), findsNothing);
     });
   });
 
   group('AppSkeleton', () {
-    testWidgets('renders skeleton with default properties', (
-        tester,
-        ) async {
-      await tester.pumpWidget(
-        buildTestWidget(
-          const AppSkeleton(width: 120),
-        ),
-      );
+    testWidgets('renders skeleton with default properties', (tester) async {
+      await tester.pumpWidget(buildTestWidget(const AppSkeleton(width: 120)));
 
       expect(find.byType(AppSkeleton), findsOneWidget);
       expect(find.byType(AppShimmer), findsOneWidget);
@@ -203,12 +167,7 @@ void main() {
 
     testWidgets('supports disabling animation', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-          const AppSkeleton(
-            width: 120,
-            animate: false,
-          ),
-        ),
+        buildTestWidget(const AppSkeleton(width: 120, animate: false)),
       );
 
       expect(find.byType(AppShimmer), findsNothing);
@@ -217,17 +176,11 @@ void main() {
     testWidgets('supports custom dimensions', (tester) async {
       await tester.pumpWidget(
         buildTestWidget(
-          const AppSkeleton(
-            width: 150,
-            height: 32,
-            animate: false,
-          ),
+          const AppSkeleton(width: 150, height: 32, animate: false),
         ),
       );
 
-      final skeleton = tester.widget<SizedBox>(
-        find.byType(SizedBox).first,
-      );
+      final skeleton = tester.widget<SizedBox>(find.byType(SizedBox).first);
 
       expect(skeleton.width, 150);
       expect(skeleton.height, 32);
@@ -237,11 +190,7 @@ void main() {
   group('AppShimmer', () {
     testWidgets('renders its child', (tester) async {
       await tester.pumpWidget(
-        buildTestWidget(
-           AppShimmer(
-            child: Text('Shimmer content'),
-          ),
-        ),
+        buildTestWidget(const AppShimmer(child: Text('Shimmer content'))),
       );
 
       expect(find.text('Shimmer content'), findsOneWidget);
@@ -250,7 +199,7 @@ void main() {
     testWidgets('supports custom duration', (tester) async {
       await tester.pumpWidget(
         buildTestWidget(
-           AppShimmer(
+          const AppShimmer(
             duration: Duration(seconds: 2),
             child: Text('Content'),
           ),
@@ -261,17 +210,17 @@ void main() {
     });
 
     testWidgets('renders without animation when reduced motion is enabled', (
-        tester,
-        ) async {
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(locale: const Locale('en')),
+          theme: AppTheme.light(
+            locale: const Locale('en'),
+          ).copyWith(splashFactory: NoSplash.splashFactory),
           home: MediaQuery(
             data: const MediaQueryData(disableAnimations: true),
-            child:  Scaffold(
-              body: AppShimmer(
-                child: Text('Static content'),
-              ),
+            child: Scaffold(
+              body: AppShimmer(child: const Text('Static content')),
             ),
           ),
         ),
@@ -300,10 +249,7 @@ void main() {
     testWidgets('renders loading indicator when loading', (tester) async {
       await tester.pumpWidget(
         buildTestWidget(
-          const AppLoadingOverlay(
-            isLoading: true,
-            child: Text('Page content'),
-          ),
+          const AppLoadingOverlay(isLoading: true, child: Text('Page content')),
         ),
       );
 
@@ -340,14 +286,14 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Submit'));
+      await tester.tap(find.text('Submit'), warnIfMissed: false);
 
       expect(tapped, isFalse);
     });
 
     testWidgets('allows interaction when barrier is dismissible', (
-        tester,
-        ) async {
+      tester,
+    ) async {
       var tapped = false;
 
       await tester.pumpWidget(

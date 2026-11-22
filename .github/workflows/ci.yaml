@@ -1,4 +1,3 @@
-
 name: Fusha CI
 
 on:
@@ -8,7 +7,6 @@ on:
   pull_request:
     branches:
       - main
-
   workflow_dispatch:
 
 permissions:
@@ -35,8 +33,14 @@ jobs:
       - name: Bootstrap workspace
         run: dart run melos bootstrap
 
-      - name: Analyze workspace
-        run: dart run melos exec --fail-fast -- flutter analyze
+      - name: Analyze pure Dart packages
+        run: dart run melos exec --fail-fast --scope=app_core -- dart analyze
 
-      - name: Test workspace
-        run: dart run melos exec --fail-fast -- flutter test
+      - name: Analyze Flutter packages
+        run: dart run melos exec --fail-fast --ignore=app_core -- flutter analyze
+
+      - name: Test pure Dart packages
+        run: dart run melos exec --fail-fast --scope=app_core -- dart test
+
+      - name: Test Flutter packages
+        run: dart run melos exec --fail-fast --dir-exists=test --ignore=app_core -- flutter test

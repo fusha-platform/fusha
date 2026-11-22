@@ -22,11 +22,22 @@ dev_dependencies:
 
 melos:
   scripts:
-    analyze:
-      run: dart run melos exec -- flutter analyze
+    analyze_dart:
+      description: Analyze pure Dart packages.
+      run: dart run melos exec --fail-fast --scope=app_core -- dart analyze
 
-    test:
-      run: dart run melos exec --dir-exists=test -- flutter test
+    analyze_flutter:
+      description: Analyze Flutter packages and applications.
+      run: dart run melos exec --fail-fast --ignore=app_core -- flutter analyze
+
+    test_dart:
+      description: Run tests for pure Dart packages.
+      run: dart run melos exec --fail-fast --scope=app_core -- dart test
+
+    test_flutter:
+      description: Run tests for Flutter packages and applications.
+      run: dart run melos exec --fail-fast --dir-exists=test --ignore=app_core -- flutter test
 
     format:
+      description: Format the entire workspace.
       run: dart format .
