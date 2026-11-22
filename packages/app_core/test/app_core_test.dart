@@ -42,9 +42,7 @@ void main() {
     });
 
     test('Failed stores the failure', () {
-      const failure = NetworkFailure(
-        message: 'Connection failed',
-      );
+      const failure = NetworkFailure(message: 'Connection failed');
 
       const result = Failed<int>(failure);
 
@@ -61,6 +59,82 @@ void main() {
       };
 
       expect(message, 'Success: 42');
+    });
+
+    group('fold', () {
+      test('calls onSuccess for successful results', () {
+        const Result<int> result = Success<int>(42);
+
+        final value = result.fold(
+          onSuccess: (data) => 'Value: $data',
+          onFailure: (failure) => 'Error: ${failure.message}',
+        );
+
+        expect(value, 'Value: 42');
+      });
+
+      test('calls onFailure for failed results', () {
+        const Result<int> result = Failed<int>(
+          NetworkFailure(message: 'Connection failed'),
+        );
+
+        final value = result.fold(
+          onSuccess: (data) => 'Value: $data',
+          onFailure: (failure) => 'Error: ${failure.message}',
+        );
+
+        expect(value, 'Error: Connection failed');
+      });
+    });
+
+    group('map', () {
+      test('transforms successful data', () {
+        const Result<int> result = Success<int>(42);
+
+        final mapped = result.map((data) => data.toString());
+
+        expect(mapped, isA<Success<String>>());
+        expect((mapped as Success<String>).data, '42');
+      });
+
+      test('preserves failure without transforming it', () {
+        const failure = NetworkFailure(message: 'Connection failed');
+        const Result<int> result = Failed<int>(failure);
+
+        final mapped = result.map((data) => data.toString());
+
+        expect(mapped, isA<Failed<String>>());
+        expect((mapped as Failed<String>).failure, same(failure));
+      });
+    });
+
+    group('flatMap', () {
+      test('chains successful operations', () {
+        const Result<int> result = Success<int>(10);
+
+        final chained = result.flatMap(
+          (value) => Success<String>('Value: $value'),
+        );
+
+        expect(chained, isA<Success<String>>());
+        expect((chained as Success<String>).data, 'Value: 10');
+      });
+
+      test('preserves failure without executing transform', () {
+        const failure = NetworkFailure(message: 'Connection failed');
+        const Result<int> result = Failed<int>(failure);
+
+        var transformCalled = false;
+
+        final chained = result.flatMap<String>((value) {
+          transformCalled = true;
+          return Success<String>('Value: $value');
+        });
+
+        expect(transformCalled, isFalse);
+        expect(chained, isA<Failed<String>>());
+        expect((chained as Failed<String>).failure, same(failure));
+      });
     });
   });
 }
