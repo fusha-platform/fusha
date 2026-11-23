@@ -1,5 +1,3 @@
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/errors/firebase_failure_mapper.dart';
+export 'src/initialization/firebase_initializer.dart';
+export 'src/instances/firebase_instances.dart';

@@ -28,19 +28,19 @@ jobs:
           cache: true
 
       - name: Set up Melos
-        run: dart pub global activate melos 8.2.2
+        run: dart pub global activate melos 8.10.1
 
       - name: Bootstrap workspace
         run: dart run melos bootstrap
 
       - name: Analyze pure Dart packages
-        run: dart run melos exec --fail-fast --scope=app_core -- dart analyze
+        run: dart run melos run analyze_dart
 
       - name: Analyze Flutter packages
-        run: dart run melos exec --fail-fast --ignore=app_core -- flutter analyze
+        run: dart run melos run analyze_flutter
 
       - name: Test pure Dart packages
-        run: dart run melos exec --fail-fast --scope=app_core -- dart test
+        run: dart run melos run test_dart
 
       - name: Test Flutter packages
-        run: dart run melos exec --fail-fast --dir-exists=test --ignore=app_core -- flutter test
+        run: dart run melos run test_flutter
