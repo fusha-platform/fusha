@@ -1,4 +1,3 @@
-
 import 'package:app_core/app_core.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -8,40 +7,25 @@ abstract final class FirebaseFailureMapper {
     final message =
         exception.message ?? 'An unexpected Firebase error occurred.';
 
-    final code = exception.code.toLowerCase();
+    final normalizedCode = exception.code.toLowerCase();
 
-    if (_networkErrorCodes.contains(code)) {
-      return NetworkFailure(
-        message: message,
-        code: exception.code,
-      );
+    if (_networkErrorCodes.contains(normalizedCode)) {
+      return NetworkFailure(message: message, code: exception.code);
     }
 
-    if (_unauthorizedErrorCodes.contains(code)) {
-      return UnauthorizedFailure(
-        message: message,
-        code: exception.code,
-      );
+    if (_unauthorizedErrorCodes.contains(normalizedCode)) {
+      return UnauthorizedFailure(message: message, code: exception.code);
     }
 
-    if (_validationErrorCodes.contains(code)) {
-      return ValidationFailure(
-        message: message,
-        code: exception.code,
-      );
+    if (_validationErrorCodes.contains(normalizedCode)) {
+      return ValidationFailure(message: message, code: exception.code);
     }
 
-    if (_serverErrorCodes.contains(code)) {
-      return ServerFailure(
-        message: message,
-        code: exception.code,
-      );
+    if (_serverErrorCodes.contains(normalizedCode)) {
+      return ServerFailure(message: message, code: exception.code);
     }
 
-    return UnknownFailure(
-      message: message,
-      code: exception.code,
-    );
+    return UnknownFailure(message: message, code: exception.code);
   }
 
   static const Set<String> _networkErrorCodes = {

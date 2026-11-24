@@ -1,7 +1,6 @@
-
 import 'package:app_core/app_core.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_backend/firebase_backend.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,8 +12,7 @@ void main() {
         message: 'No internet connection',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
       expect(failure, isA<NetworkFailure>());
       expect(failure.message, 'No internet connection');
@@ -28,8 +26,7 @@ void main() {
         message: 'Access denied',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
       expect(failure, isA<UnauthorizedFailure>());
       expect(failure.message, 'Access denied');
@@ -42,8 +39,7 @@ void main() {
         message: 'Invalid email address',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
       expect(failure, isA<ValidationFailure>());
       expect(failure.code, 'invalid-email');
@@ -56,8 +52,7 @@ void main() {
         message: 'Service unavailable',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
       expect(failure, isA<ServerFailure>());
       expect(failure.message, 'Service unavailable');
@@ -70,8 +65,7 @@ void main() {
         message: 'Unexpected error',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
       expect(failure, isA<UnknownFailure>());
       expect(failure.code, 'some-unclassified-error');
@@ -83,13 +77,25 @@ void main() {
         code: 'unknown',
       );
 
-      final failure =
-      FirebaseFailureMapper.fromException(exception);
+      final failure = FirebaseFailureMapper.fromException(exception);
 
-      expect(
-        failure.message,
-        'An unexpected Firebase error occurred.',
-      );
+      expect(failure.message, 'An unexpected Firebase error occurred.');
     });
+
+    test(
+      'normalizes error code for classification and preserves original code',
+      () {
+        final exception = FirebaseException(
+          plugin: 'firebase_auth',
+          code: 'INVALID-EMAIL',
+          message: 'Invalid email address',
+        );
+
+        final failure = FirebaseFailureMapper.fromException(exception);
+
+        expect(failure, isA<ValidationFailure>());
+        expect(failure.code, 'INVALID-EMAIL');
+      },
+    );
   });
 }
