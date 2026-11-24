@@ -1,5 +1,5 @@
 name: shared_models
-description: Shared domain entities and data models for Fusha applications.
+description: Shared domain entities and data models used across Fusha packages.
 version: 0.0.1
 publish_to: none
 resolution: workspace
