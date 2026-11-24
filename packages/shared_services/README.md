@@ -1,39 +1,60 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Shared Services
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Shared cross-feature services for the Fusha monorepo.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+This package provides a dedicated location for services that are genuinely
+shared across multiple features or applications.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Responsibility
 
-## Features
+The package is responsible for:
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Hosting reusable cross-feature service abstractions and implementations.
+- Providing shared service capabilities when multiple features need them.
+- Exposing approved public APIs through `shared_services.dart`.
 
-## Getting started
+## Architecture Boundaries
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+The package must remain focused on shared service responsibilities.
 
-## Usage
+The following do not belong here:
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+- Firebase-specific implementations, which belong in `firebase_backend`.
+- Feature-specific services, which belong inside their respective features.
+- UI components and widgets, which belong in `shared_widgets` or `design_system`.
+- Business logic and domain-specific rules, which belong in their respective
+  domain layers.
 
-```dart
-const like = 'sample';
+## Dependencies
+
+No additional dependencies are introduced until an approved shared service
+requires them.
+
+## Structure
+
+```text
+lib/
+├── shared_services.dart
+└── src/
 ```
 
-## Additional information
+The `src/` directory contains internal implementations and supporting code.
+Its structure will evolve as actual shared services are introduced.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## Public API
+
+Consumers should import the package through:
+
+```dart
+import 'package:shared_services/shared_services.dart';
+```
+
+Internal implementation files must not be imported directly by other packages.
+
+## Development Guidelines
+
+- Add a service only when it has a genuine cross-feature reuse case.
+- Keep feature-specific responsibilities within their owning features.
+- Keep Firebase-specific code inside `firebase_backend`.
+- Expose only intentionally public APIs through the barrel file.
+- Add tests for actual service behavior when services are introduced.
