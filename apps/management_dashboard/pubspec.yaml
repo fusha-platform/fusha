@@ -22,6 +22,10 @@ dependencies:
   material_ui: ^1.11.1
   cupertino_icons: ^1.0.8
 
+  # Firebase
+  firebase_core: ^5.1.0
+  firebase_auth: ^7.0.1
+
   # State management
   flutter_bloc: ^9.1.1
 
