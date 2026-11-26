@@ -1,9 +1,11 @@
 # Fusha — Data Model
 
 > **Document status:** Updated Draft — Approved Domain Decisions Incorporated
+> **Review status:** Cross-reviewed design draft; production schema and Security Rules are not frozen
 > **Product:** Fusha | فُسحة
 > **Product type:** Multi-Vendor Experiences & Activities Marketplace
-> **Target market:** Palestine
+> **Strategic product scope:** Global / multi-country
+> **Initial market context:** Palestine (as stated in the current PRD v1; rollout sequence remains a product decision)
 > **Primary data platform:** Cloud Firestore
 > **Backend operations:** Trusted Backend / Cloud Functions
 
@@ -23,6 +25,8 @@ Its purpose is to establish a consistent data foundation for:
 - Booking and reservation workflows.
 - Tickets and attendance management.
 - Provider approval and Activity moderation.
+
+Fusha's strategic product scope is global and multi-country. The current PRD v1 describes Palestine as the target market; this is retained as the current launch-market context and must not be interpreted as a single-country constraint on the domain model or architecture. The initial rollout sequence and country-specific launch requirements remain product decisions.
 
 This document distinguishes between:
 
@@ -213,6 +217,8 @@ Membership statuses:
 - Revoked
 
 A Business must support multiple users with different permissions.
+
+`Business.ownerUserId` and a `BusinessMembership` with role `Owner` both appear in this model. The authoritative ownership source, synchronization invariant, and behavior when an Owner membership is transferred or revoked are not yet defined. Implementations must not treat these two representations as independently authoritative.
 
 ### 4.4 OrganizerMembership
 
@@ -533,6 +539,8 @@ Proposed statuses:
 - Changes Requested
 - Suspended
 - Archived
+
+The Activity document carries `publicationStatus`, while each ActivityVersion carries `reviewStatus`. These are separate fields in the proposed model. The exact transition/mapping rules between a revision's review outcome and the Activity's aggregate publication state must be finalized before implementing publishing workflows. The `ActivityReview` entity is listed in the domain overview and path proposal but its schema is not yet defined.
 
 Provider approval and Activity approval are separate processes.
 
@@ -1464,6 +1472,8 @@ Examples:
 
 The final decision between top-level collections and subcollections must consider collection-group queries, access patterns, and lifecycle operations.
 
+The following names appear in the domain overview or proposed path list but do not yet have complete entity schemas and/or authoritative storage decisions in this document: `PlatformRole`, `Permission`, `OrganizerBusinessLink`, and `ActivityReview`. Their presence in the overview or path list is not sufficient authorization to implement guessed fields, permissions, or document paths. Resolve them through the open-decision register before production persistence or authorization rules are finalized.
+
 ### 12.2 Capacity Reservation Consistency
 
 A CapacityReservation must reference:
@@ -1565,7 +1575,7 @@ Participant check-in and Booking attendance finalization must coordinate through
 
    Finalization claim acquisition must transactionally update the same Booking document to `InProgress`.
 
-   Both operations must read the Booking document within their transactions. The finalization claim transaction writes the Booking document, while the check-in transaction must validate the version of the Booking document it read before committing its participant updates.
+   Both operations must read the Booking document within their transactions. The finalization claim transaction writes the Booking document to set `attendanceFinalizationStatus` and the claim fields. A participant check-in transaction must also write the Booking document when it increments `checkedInParticipantCount`; this shared read/write coordination point ensures that check-in and finalization cannot commit against conflicting Booking states. A check-in path that does not use participant counters must still revalidate the Booking state in its transaction and must not be treated as a participant-finalization path.
 
    Firestore transaction conflict detection must ensure that a check-in transaction based on a Booking state that changed during its execution cannot commit using stale state.
 
@@ -1899,7 +1909,7 @@ The question of whether partial or group check-in is supported is no longer an o
 
 ## 18. Document Status
 
-This document establishes the updated conceptual domain model and proposed Firestore structure for Fusha.
+This document establishes the updated conceptual domain model and proposed Firestore structure for Fusha. It remains a draft design specification; it is not a final deployable Firestore schema or Security Rules implementation.
 
 It incorporates the approved:
 
@@ -1927,4 +1937,15 @@ Before creating production collections or Dart models, the model must be reviewe
 - Participant attendance and finalization behavior.
 - MVP scope.
 
-The next implementation stage should define concrete Firestore document schemas, indexes, security rules, and backend transaction contracts before creating application models.
+Before creating production collections or application models, finalize the unresolved entity schemas and storage decisions, validate concrete Firestore document schemas and indexes against actual queries, convert the security policy into deployable Firestore and Storage Rules, and freeze the API/transaction contracts. The companion `SECURITY_RULES.md`, `API_CONTRACTS.md`, and `OPEN_DECISIONS.md` documents separate current design guidance from decisions that remain open.
+
+## 19. Related Documents
+
+| Document | Responsibility |
+|---|---|
+| `docs/product/PRD.md` | Product scope, actors, requirements, and customer/provider workflows |
+| `docs/backend/BACKEND_ARCHITECTURE.md` | Backend layers, module ownership, infrastructure, and transaction architecture |
+| `docs/backend/SECURITY_RULES.md` | Authorization model, protected data, Firestore and Storage Rules design |
+| `docs/backend/API_CONTRACTS.md` | Logical backend operations, API contract requirements, and error categories |
+| `docs/backend/OPEN_DECISIONS.md` | Unresolved decisions that block schema, security, and API finalization |
+| `docs/backend/FINAL_REVIEW_REPORT.md` | Cross-document review findings and readiness assessment |
