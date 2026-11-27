@@ -1,0 +1,43 @@
+{
+  "name": "@fusha/backend-functions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Trusted backend runtime for Fusha using Firebase Cloud Functions Gen 2.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "22"
+  },
+  "packageManager": "npm@10.9.2",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('lib', { recursive: true, force: true })\"",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src test vitest.config.ts eslint.config.mjs --max-warnings=0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "firebase-admin": "14.5.1",
+    "firebase-functions": "7.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.38.0",
+    "@types/node": "22.19.3",
+    "eslint": "9.38.0",
+    "eslint-config-prettier": "10.1.8",
+    "firebase-tools": "15.37.0",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2",
+    "vitest": "5.1.2"
+  },
+  "type": "module",
+  "overrides": {
+    "firebase-admin": {
+      "@firebase/database-compat": "2.1.7"
+    }
+  }
+}

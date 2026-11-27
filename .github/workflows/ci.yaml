@@ -1,12 +1,32 @@
-name: Fusha CI
+name: Fusha Flutter CI
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - '**/pubspec.yaml'
+      - '**/pubspec.lock'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'melos.yaml'
+      - 'analysis_options.yaml'
+      - '.github/workflows/ci.yaml'
   pull_request:
     branches:
       - main
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - '**/pubspec.yaml'
+      - '**/pubspec.lock'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'melos.yaml'
+      - 'analysis_options.yaml'
+      - '.github/workflows/ci.yaml'
   workflow_dispatch:
 
 permissions:

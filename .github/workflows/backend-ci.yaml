@@ -1,0 +1,45 @@
+name: Fusha Backend CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/functions/**'
+      - '.github/workflows/backend-ci.yaml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/functions/**'
+      - '.github/workflows/backend-ci.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Typecheck, Lint, Test & Build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend/functions
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: backend/functions/.nvmrc
+          cache: npm
+          cache-dependency-path: backend/functions/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run all checks
+        run: npm run check
