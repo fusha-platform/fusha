@@ -46,6 +46,8 @@ This document must not independently redefine those entities or introduce confli
 
 When a technical implementation requires a change to an approved domain rule or data structure, the relevant source document must be reviewed and updated deliberately.
 
+Fusha's strategic product scope is global and multi-country. The current PRD v1 describes Palestine as the target market; this remains the current launch-market context and does not constrain the architecture to a single country. Country rollout order, regulatory requirements, currencies, languages, and localization policies must be finalized before each market launch.
+
 ---
 
 ## 2. Architectural Decision
@@ -355,6 +357,8 @@ Examples of permitted direct reads, subject to Security Rules:
 
 A direct read is permitted only when the corresponding data visibility and ownership rules are explicitly defined.
 
+The examples above do not constitute an unconditional allowlist. Until a specific direct-write field set and matching Security Rules are approved, client applications must not directly write business-critical documents or protected fields. The default client-write policy is deny.
+
 A document being stored in Firestore does not make it publicly readable.
 
 ### 5.3 Cloud Functions Operations
@@ -377,6 +381,8 @@ Examples:
 | `issueTickets` | Internal application operation | Create tickets after confirmation when required |
 | `validateTicket` | Client command | Validate ticket and attendance eligibility |
 | `checkInTicket` | Client command | Validate the ticket and record the associated participant check-in exactly once |
+| `checkInParticipant` | Authorized application command | Check in one explicitly selected eligible participant |
+| `checkInParticipants` | Authorized application command | Execute a durable group check-in for two or more explicitly selected participants |
 | `recordParticipantAttendance` | Authorized application operation | Record an explicitly permitted participant attendance outcome |
 | `finalizeBookingAttendance` | Internal scheduled/background operation | Finalize eligible participant attendance and derive the final Booking outcome after the attendance window closes |
 | `assignPlatformRole` | Administrative command | Perform authorized platform role assignment |
@@ -446,6 +452,8 @@ Firebase Authentication provides the authenticated identity.
 
 The backend obtains the caller's verified UID from the trusted request context.
 
+For the Management Dashboard's initial authentication implementation, Email + Password and Google Sign-In are approved. Phone OTP is deferred. These authentication methods prove identity only; they do not grant provider or platform roles. The Management Dashboard remains one Flutter Web application with separate Provider and Platform Admin logical contexts; the backend remains authoritative for every role and permission decision.
+
 A client-provided `userId` must never be treated as proof of identity.
 
 ### 6.2 Authorization
@@ -475,6 +483,8 @@ Fusha has multiple actor types:
 Platform roles and provider memberships are different authorization concepts.
 
 A user's membership in a Business or Organizer does not automatically grant platform-level administrative privileges.
+
+The exact permission vocabulary and role-to-permission matrix are not defined by this architecture. No implementation may infer permission names or grant access solely from a role label.
 
 Provider access must consider:
 
@@ -2160,7 +2170,13 @@ Attendance finalization must not modify Schedule capacity counters or release co
 
 The detailed transaction and claim protocol is defined in Section 11.6.
 
-### 14.4 Other Background Processing
+### 14.4 Ticket Expiration
+
+Ticket expiration is independent of Booking attendance finalization. Unused or partially used Tickets must no longer authorize check-in when the applicable attendance window closes, and their persisted status must transition to `Expired` according to the Ticket lifecycle rules in Section 10.1.
+
+Every check-in operation must reject a closed attendance window using trusted server time, regardless of whether a background process has updated the Ticket status yet. A separate trusted mechanism must persist Ticket expiration independently of the participant attendance finalization worker. The exact scheduled/lazy processing strategy, query pattern, and recovery behavior remain to be finalized; Ticket expiration must not be made dependent on successful Booking attendance finalization.
+
+### 14.5 Other Background Processing
 
 Notification delivery and cleanup jobs must follow the same reliability principles.
 
@@ -2221,6 +2237,8 @@ A client must never grant itself administrative privileges by modifying a Firest
 
 For sensitive administrative actions, the backend must verify current platform role, account status, and relevant permissions rather than trusting stale client-provided data or claims alone.
 
+Sensitive and high-privilege accounts require multi-factor authentication (MFA) as a security requirement. The exact enforcement points, accepted factors, recovery process, step-up requirements, and operational exception policy remain to be designed; MFA must not be considered satisfied merely because the user has an Admin or Super Admin role claim.
+
 ### 15.7 Audit Logs
 
 Sensitive operations must record:
@@ -2237,7 +2255,7 @@ Attendance corrections and administrative capacity adjustments must be auditable
 
 Audit records must not be directly writable or editable by ordinary clients.
 
-Detailed security policies belong in `SECURITY_RULES.md`.
+Detailed security policies belong in `SECURITY_RULES.md`. That document is currently a policy and rule-design specification; it must not be treated as deployable `firestore.rules` or `storage.rules` until collection paths, field allowlists, and permission decisions are finalized and emulator-tested.
 
 ---
 
@@ -2276,7 +2294,7 @@ Application errors must be independent of Firebase-specific error codes.
 
 The access layer maps application errors into the appropriate Callable or HTTP response format.
 
-Detailed error codes and response schemas belong in `API_CONTRACTS.md`.
+Detailed error codes and response schemas belong in `API_CONTRACTS.md`. Operation labels in this architecture are application-level names, not approved exported Callable/HTTPS function names. The companion contract catalogue must not be interpreted as a frozen wire contract until its open fields are resolved.
 
 ---
 
@@ -2868,6 +2886,8 @@ The following rules are mandatory:
 | `docs/backend/BACKEND_ARCHITECTURE.md` | Backend architecture, layers, modules and infrastructure |
 | `docs/backend/SECURITY_RULES.md` | Firestore and Storage access policies and authorization matrix |
 | `docs/backend/API_CONTRACTS.md` | Function operations, payloads, response schemas and error contracts |
+| `docs/backend/OPEN_DECISIONS.md` | Unresolved product, domain, security, storage and operational decisions |
+| `docs/backend/FINAL_REVIEW_REPORT.md` | Cross-document review findings, corrections and readiness assessment |
 
 ---
 
@@ -2884,5 +2904,7 @@ The architecture preserves separation between business logic and Firebase infras
 Booking, capacity, and attendance architecture are first-class parts of this design.
 
 Detailed implementation limits, transaction behavior, expiration reconciliation, attendance finalization, and concurrency guarantees must be validated through integration tests and load testing before production release.
+
+The companion Security Rules and API Contracts documents are design-level specifications until the open decisions are resolved. They do not constitute deployable rules or finalized external API payloads.
 
 The participant-level attendance policy must remain consistent with `docs/backend/DATA_MODEL.md` before implementation.
